@@ -2,7 +2,7 @@ const isLocalHost =
   typeof window !== "undefined" &&
   (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-const defaultApiBaseUrl = isLocalHost ? "http://localhost:4000" : "/_/backend";
+const defaultApiBaseUrl = isLocalHost ? "http://localhost:4000" : "";
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || defaultApiBaseUrl;
 
 async function request(path, options = {}) {
