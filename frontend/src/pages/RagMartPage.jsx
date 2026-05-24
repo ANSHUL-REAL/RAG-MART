@@ -13,12 +13,12 @@ const opsRows = [
 ];
 
 const rescueImages = {
-  "bakery-combo-box": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=900&q=80",
-  "veggie-rescue-pack": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80",
-  "sushi-flash-platter": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=900&q=80",
-  "canteen-lunch-kit": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=900&q=80",
-  "protein-snack-bundle": "https://images.unsplash.com/photo-1622484211148-6b206dd7709e?auto=format&fit=crop&w=900&q=80",
-  "event-dessert-crate": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80"
+  "bakery-combo-box": "/assets/images/rag-mart-products/bakery-combo-box.jpg",
+  "veggie-rescue-pack": "/assets/images/rag-mart-products/veggie-rescue-pack.jpg",
+  "sushi-flash-platter": "/assets/images/rag-mart-products/sushi-flash-platter.jpg",
+  "canteen-lunch-kit": "/assets/images/rag-mart-products/canteen-lunch-kit.jpg",
+  "protein-snack-bundle": "/assets/images/rag-mart-products/protein-snack-bundle.jpg",
+  "event-dessert-crate": "/assets/images/rag-mart-products/event-dessert-crate.jpg"
 };
 
 const productIcons = {
