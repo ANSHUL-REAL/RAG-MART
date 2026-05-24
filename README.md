@@ -2,19 +2,24 @@
 
 **RescueCart AI: Trust-Based Real-Time Surplus Commerce Powered by Valkey**
 
-RAG MART is a real-time surplus rescue marketplace for Hyderabad. It helps shoppers find near-expiry bakery boxes, meal kits, grocery packs, and event surplus before they go to waste. The product is not a generic e-commerce clone: the main workflow is urgency-based discovery, short-lived reservation carts, seller trust, fair access, and operator observability powered by Valkey.
+RAG MART is a Hyderabad-first surplus rescue marketplace. It helps customers discover near-expiry food, grocery, household, and essentials deals from local partners before inventory goes to waste.
 
-## Highlights
+The platform is built around real reservation behavior: shoppers sign in, search local rescue listings, inspect ingredients and seller trust, reserve items into a short-lived cart, choose a payment option, and place an order with a generated UPI reference when UPI is selected.
 
-- Hyderabad-first rescue marketplace UI at `/rag-mart`.
-- Email login plus Firebase Google sign-in.
-- Optional phone number for pickup updates.
-- Search bar for rescue intent such as `bakery under 100` or `veggies`.
-- Product cards with photos, expiry, discount, stock left, seller rating, and trust score.
-- Reservation cart connected to the backend.
-- Order-now flow with payment choice and generated UPI collection reference.
-- Operator console hidden behind logged-in partner access.
-- Docker Compose setup for frontend, backend, and Valkey.
+## Product Highlights
+
+- Main marketplace route: `/rag-mart`
+- Hyderabad-focused rescue listings with partner names and product photos
+- Email login and Firebase Google sign-in
+- Optional phone number for pickup updates
+- Search by item, seller, category, ingredient, budget, or urgency
+- Product cards with expiry, discount, stock left, seller rating, trust score, and ingredients
+- Valkey-backed reservation cart that survives refresh
+- Order-now flow with UPI, cash at pickup, and card options
+- Generated UPI collection reference for UPI orders
+- Nearby pickups map for Hyderabad partner areas
+- Partner console for operational visibility
+- Docker setup for frontend, backend, and Valkey
 
 ## Architecture
 
@@ -30,25 +35,25 @@ Node / Express API
 Valkey
 ```
 
-## What Valkey Powers
+## How Valkey Is Used
 
-| Capability | Valkey usage |
+| Feature | Valkey data structure |
 | --- | --- |
 | Reservation cart | Hash: `cart:{userId}` with 10 minute expiry |
 | Trending rescue deals | Sorted set: `trending:rescue_items` |
 | Search analytics | Sorted set: `search:queries` |
 | Recommendations | TTL cache: `recommendations:{userId}` |
 | Checkout rate limiting | Expiring counter: `rate:checkout:{userId}` |
-| Activity feed | List: `activity:logs` |
+| Activity log | List: `activity:logs` |
 | Seller trust and ratings | Hashes/sorted sets: `seller:trust:{sellerId}`, `seller:ratings:{sellerId}` |
 | Disputes | Hash/list keys: `dispute:{disputeId}`, `disputes:open` |
 | Impact metrics | Hash: `metrics:impact` |
 
-If Valkey is unavailable, the backend uses an in-memory fallback so local previews still work. For judging and deployment, run with a real Valkey/Redis-compatible URL.
+If `VALKEY_URL` is not available, the backend can run with an in-memory local preview store. For real operation, use Docker Valkey locally or a hosted Valkey/Redis-compatible URL in production.
 
 ## Run With Docker
 
-Docker is the recommended judging setup because it starts all three services together.
+Docker is the easiest way to run the complete stack.
 
 ```bash
 docker compose up --build
@@ -59,18 +64,20 @@ Open:
 - Frontend: `http://localhost:3000/rag-mart`
 - Backend health: `http://localhost:4000/api/health`
 
-The Docker backend uses:
+The backend container connects with:
 
 ```text
 VALKEY_URL=redis://valkey:6379
 ```
 
-Verify Valkey keys:
+Verify Valkey data:
 
 ```bash
 docker exec -it rag-mart-valkey valkey-cli
 KEYS *
+HGETALL cart:<user-id>
 ZRANGE trending:rescue_items 0 -1 WITHSCORES
+ZRANGE search:queries 0 -1 WITHSCORES
 LRANGE activity:logs 0 10
 HGETALL metrics:impact
 ```
@@ -83,7 +90,7 @@ Start Valkey:
 docker run -d --name rag-mart-valkey -p 6379:6379 valkey/valkey-bundle:9-alpine
 ```
 
-Start backend:
+Start the API:
 
 ```bash
 cd backend
@@ -91,7 +98,7 @@ npm install
 npm start
 ```
 
-Start frontend:
+Start the frontend:
 
 ```bash
 cd frontend
@@ -121,11 +128,11 @@ Frontend:
 REACT_APP_API_BASE_URL=http://localhost:4000
 ```
 
-For production, set `REACT_APP_API_BASE_URL` to your hosted backend URL.
+On Vercel, the frontend automatically uses `/_/backend` when `REACT_APP_API_BASE_URL` is not set. If the backend is hosted elsewhere, set `REACT_APP_API_BASE_URL` to that API URL.
 
 ## Firebase Google Sign-In
 
-The frontend includes Firebase config in `frontend/src/firebase.js`.
+Firebase setup lives in `frontend/src/firebase.js`.
 
 In Firebase Console:
 
@@ -134,55 +141,25 @@ In Firebase Console:
 3. Add authorized domains:
    - `localhost`
    - your Vercel domain
-   - any custom domain you connect later
+   - any custom domain connected later
 
-Email/password in this app is intentionally lightweight for the hackathon flow; Google sign-in uses Firebase Auth.
+Email login is intentionally simple: any valid-looking email can start a local user session.
 
-## Deploy Frontend On Vercel
+## Deploy On Vercel
 
-This repo is a monorepo. Deploy the React frontend from the `frontend/` directory.
-
-Recommended Vercel settings:
-
-```text
-Root Directory: frontend
-Build Command: npm run build
-Output Directory: build
-Install Command: npm install
-```
-
-Set this Vercel environment variable:
+The repository includes `vercel.json` for the frontend and Express backend service.
 
 ```bash
-REACT_APP_API_BASE_URL=https://your-backend-url.example.com
+npx vercel --prod --force
 ```
 
-Then deploy:
+Recommended production environment variables:
 
 ```bash
-cd frontend
-npx vercel
-```
-
-For production:
-
-```bash
-npx vercel --prod
-```
-
-## Deploy Backend
-
-The backend is a normal Express service and is Docker-ready.
-
-Deploy it to Render, Railway, Fly.io, or any container host with:
-
-```bash
-PORT=4000
-VALKEY_URL=your-hosted-valkey-url
+VALKEY_URL=<hosted-valkey-or-redis-url>
 CORS_ORIGIN=https://your-vercel-domain.vercel.app
+REACT_APP_API_BASE_URL=/_/backend
 ```
-
-The backend Dockerfile is in `backend/Dockerfile`.
 
 ## API Endpoints
 
@@ -199,20 +176,19 @@ The backend Dockerfile is in `backend/Dockerfile`.
 - `POST /api/dispute/report`
 - `GET /api/admin/metrics`
 
-## Judge Flow
+## Customer Flow
 
 1. Open `/rag-mart`.
-2. Search for a rescue item.
+2. Search for rescue items such as `bakery under 100`, `spinach`, or `lunch`.
 3. Login with Google or email.
-4. Add an optional phone number for pickup updates.
-5. Reserve a rescue deal.
-6. Refresh and confirm the cart stays attached to the logged-in shopper.
+4. Add a phone number for pickup updates if desired.
+5. Reserve an item into the cart.
+6. Review ingredients, seller trust, expiry, and order total.
 7. Choose UPI, cash at pickup, or card.
-8. Click **Order now** and see the UPI reference/order receipt.
-9. Open Partner Console after login.
-10. Show Valkey events, trending, search analytics, trust, disputes, and impact metrics.
+8. Place the order.
+9. Receive the generated order ID and UPI reference when UPI is selected.
 
-## Verification Commands
+## Verification
 
 ```bash
 cd frontend
@@ -233,4 +209,4 @@ curl http://localhost:4000/api/health
 /rag-mart
 ```
 
-The visible marketplace brand is always **RAG MART**.
+The public marketplace brand is **RAG MART**.

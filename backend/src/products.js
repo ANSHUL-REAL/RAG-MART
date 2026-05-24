@@ -15,6 +15,7 @@ export const products = [
     trustLabel: "Verified Reliable",
     mode: "Pickup",
     wasteKg: 2.4,
+    ingredients: ["Sourdough rolls", "Wheat loaf", "Butter croissant", "Sesame bun"],
     keywords: ["bakery", "bread", "cheap dinner", "breakfast", "under 100", "expiring soon", "hotel"],
     story: "Fresh breads, rolls, and pastries released before the bakery counter closes."
   },
@@ -34,6 +35,7 @@ export const products = [
     trustLabel: "Trusted Seller",
     mode: "Pickup",
     wasteKg: 3.1,
+    ingredients: ["Tomato", "Carrot", "French beans", "Coriander", "Spinach"],
     keywords: ["vegetarian", "grocery", "produce", "hostel grocery", "cheap dinner", "fresh"],
     story: "Seasonal vegetables bundled for same-day pickup at half price."
   },
@@ -53,6 +55,7 @@ export const products = [
     trustLabel: "Trusted Seller",
     mode: "Pickup",
     wasteKg: 1.8,
+    ingredients: ["Sushi rice", "Nori", "Cucumber", "Avocado", "Soy sauce"],
     keywords: ["sushi", "lunch", "dinner", "expiring soon", "high protein", "meal"],
     story: "Chef-prepared platter moving fast before the evening cutoff."
   },
@@ -72,6 +75,7 @@ export const products = [
     trustLabel: "Trusted Seller",
     mode: "Pickup",
     wasteKg: 1.2,
+    ingredients: ["Rice", "Dal", "Mixed vegetables", "Chapati", "Curd"],
     keywords: ["college", "canteen", "lunch", "dinner", "cheap", "under 100", "student"],
     story: "Affordable lunch trays for students and nearby workers."
   },
@@ -91,6 +95,7 @@ export const products = [
     trustLabel: "Verified Reliable",
     mode: "Delivery",
     wasteKg: 0.9,
+    ingredients: ["Protein bar", "Roasted chana", "Peanut bites", "Whey shake"],
     keywords: ["protein", "snacks", "gym", "healthy", "grocery", "trusted sellers"],
     story: "Near-expiry bars and shakes from a verified seller."
   },
@@ -110,6 +115,7 @@ export const products = [
     trustLabel: "New / Moderate Trust",
     mode: "Pickup",
     wasteKg: 4.6,
+    ingredients: ["Chocolate pastry", "Gulab jamun", "Fruit tart", "Cream roll"],
     keywords: ["dessert", "event", "cake", "party", "expiring soon", "bakery"],
     story: "Premium desserts released after a catered event, verified by the partner desk."
   }
@@ -135,6 +141,7 @@ export function searchProducts(query = "", category = "All") {
       product.seller,
       product.story,
       product.trustLabel,
+      ...(product.ingredients || []),
       String(product.price),
       ...product.keywords
     ].join(" ").toLowerCase();

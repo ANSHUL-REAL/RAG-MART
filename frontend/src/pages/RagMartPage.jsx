@@ -110,6 +110,22 @@ function DealImage({ product, compact = false }) {
   );
 }
 
+function IngredientsList({ product, compact = false }) {
+  const ingredients = product.ingredients || [];
+  if (!ingredients.length) return null;
+
+  return (
+    <div className={`ingredients-row ${compact ? "is-compact" : ""}`}>
+      <span>Ingredients</span>
+      <div>
+        {ingredients.slice(0, compact ? 3 : 5).map((ingredient) => (
+          <em key={ingredient}>{ingredient}</em>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function RescueDealCard({ product, onView, onAdd, money }) {
   return (
     <article className="rescue-deal-card">
@@ -127,6 +143,7 @@ function RescueDealCard({ product, onView, onAdd, money }) {
         </div>
         <h3>{product.name}</h3>
         <p>{product.story}</p>
+        <IngredientsList product={product} />
         <div className="seller-box">
           <i className="ph ph-seal-check" />
           <div>
@@ -850,6 +867,7 @@ const RagMartPage = () => {
             </div>
             <h2>{heroProduct.name}</h2>
             <p>{heroProduct.story}</p>
+            <IngredientsList product={heroProduct} compact />
             <div className="seller-box">
               <i className="ph ph-seal-check" />
               <div>

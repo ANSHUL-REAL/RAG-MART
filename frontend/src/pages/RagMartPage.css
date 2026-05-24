@@ -572,6 +572,53 @@
   line-height: 1.6;
 }
 
+.ingredients-row {
+  background: linear-gradient(135deg, rgba(108, 248, 187, 0.14), rgba(218, 226, 253, 0.18));
+  border: 1px solid rgba(0, 108, 73, 0.14);
+  border-radius: 16px;
+  margin: 14px 0;
+  padding: 12px;
+}
+
+.ingredients-row > span {
+  color: var(--secondary);
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.ingredients-row div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.ingredients-row em {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 108, 73, 0.14);
+  border-radius: 999px;
+  color: var(--primary);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  padding: 6px 9px;
+}
+
+.ingredients-row.is-compact {
+  margin-bottom: 12px;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+.ingredients-row.is-compact em {
+  font-size: 11px;
+  padding: 5px 8px;
+}
+
 .seller-box {
   background: var(--background);
   border: 1px solid rgba(198, 198, 205, 0.55);

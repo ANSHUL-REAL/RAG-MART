@@ -137,7 +137,7 @@ app.get("/api/products", async (request, response) => {
 });
 
 app.post("/api/events/view", async (request, response) => {
-  const { userId = "judge-demo", productId } = request.body;
+  const { userId = "guest-user", productId } = request.body;
   const product = findProduct(productId);
   if (!product) return response.status(404).json({ error: "Product not found" });
 
@@ -280,7 +280,7 @@ app.post("/api/checkout/:userId", async (request, response) => {
 
 app.post("/api/rating", async (request, response) => {
   const {
-    userId = "judge-demo",
+    userId = "guest-user",
     orderId = `ORDER-${Date.now()}`,
     sellerId = "deccan-crown-bakery",
     overall = 4.5,
@@ -300,7 +300,7 @@ app.post("/api/rating", async (request, response) => {
 
 app.post("/api/dispute/report", async (request, response) => {
   const {
-    userId = "judge-demo",
+    userId = "guest-user",
     orderId = `ORDER-${Date.now()}`,
     sellerId = "sakura-banjara",
     issueType = "not_delivered",

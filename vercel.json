@@ -7,5 +7,17 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "experimentalServices": {
+    "frontend": {
+      "root": "frontend",
+      "routePrefix": "/",
+      "framework": "create-react-app"
+    },
+    "backend": {
+      "root": "backend",
+      "entrypoint": "src/server.js",
+      "routePrefix": "/_/backend"
+    }
+  }
 }
